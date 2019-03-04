@@ -81,6 +81,7 @@ module Embulk
           begin
             yield
           rescue ::Java::Java.net.SocketException, ::Java::Java.net.ConnectException => e
+            Embulk.logger.warn { "embulk-output-bigquery: Java.net.ConnectException: \##{e.class} #{e.message}" }
             if ['Broken pipe', 'Connection reset', 'Connection timed out'].include?(e.message)
               if retries < @task['retries']
                 retries += 1
